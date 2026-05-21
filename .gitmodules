@@ -1,4 +1,4 @@
-[submodule "libs/clp"]
+[submodule "libs/c_lib"]
 	path = libs/c_lib
 	url = git@github.com:dieriba/c_lib.git
 [submodule "libs/clp"]
