@@ -1,5 +1,5 @@
 #include "clp.h"
-#include "jailer.h"
+#include "includes/container.h"
 
 typedef enum COMMAND
 {
@@ -15,7 +15,7 @@ void handle_user_command(Command *user_command)
     case JAILER:
         break;
     case CONTAINER_CMD_RUN:
-        jailer_container_run(user_command);
+        container_run(user_command);
     default:
         break;
     }

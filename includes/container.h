@@ -2,6 +2,6 @@
 #define JAILER_H
 #include "clp.h"
 
-void jailer_container_run(Command *command);
+void container_run(Command *command);
 
 #endif
