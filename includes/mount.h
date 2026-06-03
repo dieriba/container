@@ -7,6 +7,6 @@
 #define MOUNT_OPT_KEY_DST MOUNT_OPT "dst"
 
 
-void mount(const char*src, const char*dst);
+void handle_mount(Option* mount_opt);
 
 #endif

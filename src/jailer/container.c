@@ -4,6 +4,8 @@
 
 void container_run(Command *command)
 {
+    handle_mount(clp_get_option_by_short(command, *MOUNT_SHORT_NAME_OPT));
+    
 }
 
 Command init_container_command()
