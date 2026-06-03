@@ -5,7 +5,7 @@
 void container_run(Command *command)
 {
     handle_mount(clp_get_option_by_short(command, *MOUNT_SHORT_NAME_OPT));
-    
+
 }
 
 Command init_container_command()
@@ -26,6 +26,8 @@ Command init_container_command()
     clp_add_command_option(&run, &run_cmd_opt_ports);
     clp_add_command_option(&run, &run_cmd_opt_mount);
     clp_add_command_option(&run, &run_cmd_opt_network);
+
+    clp_add_command_sub_command(&container, &run);
 
     return container;
 }
