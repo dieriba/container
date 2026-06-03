@@ -5,7 +5,6 @@
 void container_run(Command *command)
 {
     handle_mount(clp_get_option_by_short(command, *MOUNT_SHORT_NAME_OPT));
-
 }
 
 Command init_container_command()
@@ -16,11 +15,8 @@ Command init_container_command()
     Command run;
     clp_init_command(&run, CONTAINER_CMD_RUN, "run", "Create and run a new container");
 
-    Option run_cmd_opt_mount;
-    clp_init_option_kv(&run_cmd_opt_mount, MOUNT_LONG_NAME_OPT, MOUNT_SHORT_NAME_OPT, "Mount host specific path into container", false, false);
-
-
-    clp_add_command_option(&run, &run_cmd_opt_mount);
+    Option mount_opt = new_mount_option();
+    clp_add_command_option(&run, &mount_opt);
 
     clp_add_command_sub_command(&container, &run);
 
