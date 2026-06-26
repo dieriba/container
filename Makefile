@@ -1,30 +1,45 @@
-include c_lib/config.mk
-
 TARGET_DIR := target
 BUILD_DIR  := $(TARGET_DIR)/build
+LIB_DIR		:= $(BUILD_DIR)/lib
+LIBS_DIR := libs
+LIB_CLP_DIR := $(LIBS_DIR)/clp
+LIB_D_LIB_DIR := $(LIBS_DIR)/c_lib
+LIB_CLP		:= $(LIB_DIR)/libclp.a
+LIB_D_LIB   := $(LIB_DIR)/libd_lib.a
+BIN_DIR    := $(BUILD_DIR)/bin
 
 NAME       := container
-BIN        := $(BUILD_DIR)/$(NAME)
+BIN        := $(BIN_DIR)/$(NAME)
 
 SRC_DIRS   := src
 SRCS       := $(shell find $(SRC_DIRS) -name '*.c')
 OBJS       := $(addprefix $(BUILD_DIR)/, $(SRCS:.c=.o))
 DEPS       := $(OBJS:.o=.d)
 
-INC_DIRS   := includes $(D_LIB_INCLUDE)
+D_LIB_INCLUDE := $(LIB_D_LIB_DIR)/includes
+CLP_LIB_INCLUDE := $(LIB_CLP_DIR)/includes
+
+INC_DIRS   := includes $(D_LIB_INCLUDE) $(CLP_LIB_INCLUDE)
 INC_FLAGS  := $(addprefix -I,$(INC_DIRS))
 
 CPPFLAGS   := $(INC_FLAGS) -MMD -MP -Wall -Werror -Wextra
 
-all: $(D_LIB_PATH) $(BIN)
+all: $(BIN)
 .PHONY: all
 
-$(D_LIB_PATH):
-	$(MAKE) -C $(D_LIB_DIR) all
-
-$(BIN): $(OBJS) $(D_LIB_PATH)
+$(BIN): $(OBJS) $(LIB_CLP) $(LIB_D_LIB)
 	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(LDFLAGS) $^ -o $(BIN)
+
+$(LIB_D_LIB):
+	mkdir -p $(LIB_DIR)
+	$(MAKE) -C $(LIB_D_LIB_DIR)
+	cp $(LIB_D_LIB_DIR)/$(LIB_DIR)/*.a $(LIB_DIR)
+
+$(LIB_CLP):
+	mkdir -p $(LIB_DIR)
+	$(MAKE) C_LIB_DIR=$(CURDIR)/$(LIB_D_LIB_DIR) -C $(LIB_CLP_DIR)
+	cp $(LIB_CLP_DIR)/$(LIB_DIR)/*.a $(LIB_DIR)
 
 $(BUILD_DIR)/%.o: %.c
 	mkdir -p $(dir $@)
@@ -32,7 +47,9 @@ $(BUILD_DIR)/%.o: %.c
 
 clean:
 	rm -rf $(TARGET_DIR)
-	$(MAKE) -C $(D_LIB_DIR) clean
+	$(MAKE) -C $(LIB_D_LIB_DIR) clean
+	$(MAKE) -C $(LIB_CLP_DIR) clean
+
 .PHONY: clean
 
 fclean: clean
