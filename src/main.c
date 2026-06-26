@@ -1,6 +1,6 @@
 #include "clp.h"
 #include "command.h"
-#include "includes/container.h"
+#include "../includes/container.h"
 
 void handle_user_command(Command *user_command)
 {
@@ -17,14 +17,13 @@ void handle_user_command(Command *user_command)
 
 int main(int argc, char **argv, char **envp)
 {
-    Command root;
-    clp_init_command(&root, JAILER, "jailer", "");
+    Command *root = clp_new_command(JAILER, "jailer", "");
 
-    Command container = init_container_command();
-    clp_add_command_sub_command(&root, &container);
+    Command *container = init_container_command();
+    clp_add_command_sub_command(root, container);
     
     Command *user_command = NULL;
-    clp_parse_args(&root, argv, &user_command);
+    clp_parse_args(root, argv, &user_command);
     handle_user_command(user_command);
-    clp_cleanup(&root);
+    clp_cleanup(root);
 }

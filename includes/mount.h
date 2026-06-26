@@ -9,6 +9,6 @@
 
 void handle_mount(Option *mount_opt);
 
-Option new_mount_option();
+Option *new_mount_option();
 
 #endif
